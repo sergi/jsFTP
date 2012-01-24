@@ -326,17 +326,23 @@ var Ftp = module.exports = function(cfg) {
         var ftpResponse = action[0];
         var command  = action[1];
         var callback = command[1];
+        var err;
 
         self.cmdListeners.forEach(function(listener) {
             listener(self._sanitize(command[0]), ftpResponse);
         });
 
-        if (callback) {
+        if (typeof callback === 'function') {
             // In FTP every response code above 399 means error in some way.
             // Since the RFC is not respected by many servers, we are goiong to
             // overgeneralize and consider every value above 399 as an error.
-            var hasFailed = ftpResponse && ftpResponse.code > 399;
-            callback(hasFailed && (ftpResponse.text || "Unknown FTP error."), ftpResponse);
+            if (ftpResponse && ftpResponse.code > 399) {
+            	err = new Error(ftpResponse.text || "Unknown FTP error.")
+            	err.code = ftpResponse.code;
+            	callback(err);
+            } else {
+            	callback(null, ftpResponse);
+            }
         }
     };
 
