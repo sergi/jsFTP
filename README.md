@@ -172,6 +172,9 @@ Downloads `filePath` from the server.
 Uploads a file to `filePath`. It accepts a `buffer` parameter that will be
 written in the remote file.
 
+#### Ftp.append(filePath, buffer, callback)
+Writes the contents of `buffer` to the end of remote file at `filePath`.
+
 #### Ftp.rename(from, to, callback)
 Renames a file in the server. `from` and `to` are both filepaths.
 

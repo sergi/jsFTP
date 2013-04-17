@@ -175,7 +175,7 @@ describe("jsftp test suite", function() {
         });
     });
 
-    it("test create and delete a file", function(next) {
+    it("test create, append and delete a file", function(next) {
         var filePath = remoteCWD + "/file_ftp_test.txt";
         Fs.readFile(CWD + "/jsftp_test.js", "binary", function(err, data) {
             var buffer = new Buffer(data, "binary");
@@ -186,10 +186,14 @@ describe("jsftp test suite", function() {
                     assert.ok(!err);
                     assert.equal(buffer.length, Fs.statSync(CWD + "/jsftp_test.js").size);
 
-                    ftp.raw.dele(filePath, function(err, data) {
+                    ftp.append(filePath, buffer, function (err, res) {
                         assert.ok(!err);
 
-                        next();
+                        ftp.raw.dele(filePath, function(err, data) {
+                            assert.ok(!err);
+
+                            next();
+                        });
                     });
                 });
             });
