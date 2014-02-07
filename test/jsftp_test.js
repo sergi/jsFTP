@@ -733,4 +733,28 @@ describe("jsftp test suite", function() {
       next();
     });
   });
+
+  it("Test method chaining", function(next) {
+    var count = 0,
+      ftp2 = ftp.auth(FTPCredentials.user, FTPCredentials.pass,
+        function(err, res) {
+          count += 1;
+          assert(!err, err);
+          assert.equal(res.code, 230, res);
+          assert.equal(count, 1);
+          ftp2.raw('pwd', function(err, res) {
+            count += 1;
+            assert(!err, err);
+            assert.equal(res.code, 257, res);
+            assert.equal(count, 2);
+          }).raw.cwd('..', function(err, res) {
+            count += 1;
+            assert(!err, err);
+            assert.equal(res.code, 250, res);
+            assert.equal(count, 3);
+            next();
+          });
+        });
+    assert(ftp2 instanceof Ftp);
+  });
 });
