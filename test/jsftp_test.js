@@ -66,7 +66,7 @@ var FTPCredentials = {
   pass: "12345"
 };
 
-var createLocal = false; //Set to false if you are using your own local FTP server
+var createLocal = true; //Set to false if you are using your own local FTP server
 
 function getRemotePath(path) {
   return Path.join('test', 'test_c9', path);
