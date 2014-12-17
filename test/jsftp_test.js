@@ -66,6 +66,8 @@ var FTPCredentials = {
   pass: "12345"
 };
 
+var createLocal = false; //Set to false if you are using your own local FTP server
+
 function getRemotePath(path) {
   return Path.join('test', 'test_c9', path);
 }
@@ -73,11 +75,11 @@ function getRemotePath(path) {
 function getLocalPath(path) {
   return Path.join(process.cwd(), 'test', 'test_c9', path);
 }
-var CWD = process.cwd() + "/test";
+var CWD = Path.join(process.cwd(),"test");
 var remoteCWD = "test/test_c9";
 exec('mkdir', [__dirname + "/" + remoteCWD]);
 
-describe("jsftp test suite", function() {
+function testRoutine(){
   var ftp, server;
   beforeEach(function(next) {
     rimraf(getLocalPath(''), function() {
@@ -85,7 +87,7 @@ describe("jsftp test suite", function() {
       Fs.writeFileSync(getLocalPath('testfile.txt'), "test");
       Fs.writeFileSync(getLocalPath('testfile2.txt'), "test2");
 
-      if (FTPCredentials.host === "localhost") {
+      if (createLocal && FTPCredentials.host === "localhost") {
         server = new ftpServer();
         server.init(FTPCredentials);
       }
@@ -99,7 +101,7 @@ describe("jsftp test suite", function() {
 
   afterEach(function(next) {
     setTimeout(function() {
-      server.stop();
+      server && server.stop();
       if (ftp) {
         ftp.destroy();
         ftp = null;
@@ -362,7 +364,7 @@ describe("jsftp test suite", function() {
 
         ftp.ls(filePath, function(err, res) {
           assert.ok(!err);
-          assert.equal(buffer.length, Fs.statSync(CWD + "/jsftp_test.js").size);
+          assert.equal(buffer.length, Fs.statSync(Path.join(CWD,"jsftp_test.js")).size);
 
           ftp.raw.dele(filePath, function(err, data) {
             assert.ok(!err);
@@ -406,7 +408,7 @@ describe("jsftp test suite", function() {
 
       ftp.ls(filePath, function(err, res) {
         assert.ok(!err);
-        assert.equal(res[0].size, Fs.statSync(CWD + "/jsftp_test.js").size);
+        assert.equal(res[0].size, Fs.statSync(Path.join(CWD,"jsftp_test.js")).size);
 
         ftp.raw.dele(filePath, function(err, data) {
           assert.ok(!err);
@@ -443,7 +445,7 @@ describe("jsftp test suite", function() {
   });
 
   it("test get a file", function(next) {
-    var localPath = CWD + '/test_c9/testfile.txt';
+    var localPath = Path.join(CWD,"test_c9","testfile.txt");
     var remotePath = remoteCWD + "/testfile.txt";
     var realContents = Fs.readFileSync(localPath, "utf8");
     var str = "";
@@ -794,5 +796,27 @@ describe("jsftp test suite", function() {
       args.push(arguments[0]);
       onDone();
     });
+  });
+}
+
+describe("jsftp test suite", function(){
+  describe("without ssl", testRoutine);
+  describe("with ssl", function(){
+    before(function(){
+      //change ftp credentials to ssl
+      FTPCredentials = {
+        host: "localhost",
+        user: "user",
+        port: 990,
+        pass: "12345",
+        ssl:true,
+        //extra options added for testing locally without valid certs
+        sslOptions:{
+          requestCert: false,
+          rejectUnauthorized: false
+        }
+      };
+    });
+    testRoutine();
   });
 });
