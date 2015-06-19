@@ -168,6 +168,18 @@ Stores the remote file directly in the given local path.
   });
 ```
 
+#### Ftp.getBuffer(remotePath, callback)
+The same as `get`, but the callback receive a buffer of remote file content.
+
+```javascript
+  ftp.getBuffer('remote/file.txt', function(hadErr, data) {
+    if (hadErr)
+      console.error('There was an error retrieving the file.');
+    else
+      console.log(data.toString());
+  });
+```
+
 #### Ftp.put(source, remotePath, callback)
 Uploads a file to `filePath`. It accepts a string with the local path for the
 file or a `Buffer` as a `source` parameter.
