@@ -71,8 +71,12 @@ API and examples
     port: 3333, // Port number for the current FTP server (defaults to 21).
     user: 'user', // Username
     pass: 'pass', // Password
+    ssl: true, //[optional] whether using SFTP
+    sslOptions: {} //[optional] config object for ssl connection (see below for details)
   }
   ```
+  - `options.sslOptions` is a config object for an SFTP or FTP with TLS/SSL implicit or explicit encryption
+    - applicable properties are as required for `options` argument in [tls.connect(port, host, options)](https://nodejs.org/api/tls.html#tls_tls_connect_port_host_options_callback)
 
 Creates a new Ftp instance.
 
