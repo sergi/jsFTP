@@ -78,6 +78,7 @@ describe('jsftp test suite', function() {
     ftp.auth(
       options.user,
       options.pass + '_invalid',
+      null,
       function(err, data) {
         assert.equal(err.code, 530);
         assert.equal(data, null);
@@ -554,7 +555,7 @@ describe('jsftp test suite', function() {
 
   it('test attach event handlers: connect', function(_next) {
     var clientOnConnect = function() {
-      client.auth(options.user, options.pass, next);
+      client.auth(options.user, options.pass, null, next);
     };
 
     var next = function(err) {
