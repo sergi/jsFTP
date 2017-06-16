@@ -26,6 +26,22 @@ var Ftp = new JSFtp({
 });
 ```
 
+Through a proxy:
+
+```javascript
+var Ftp = new JSFtp({
+    host: proxy.host,
+    port: ftp.port,
+    user: `${ftp.user}@${ftp.host} ${proxy.user}`,
+    pass: ftp.pass,
+    cwd: '/82844',
+    root: '/82844',
+    debugMode: true,
+    acct: proxy.pass
+})
+```
+
+
 jsftp gives you access to all the raw commands of the FTP protocol in form of
 methods in the `Ftp` object. It also provides several convenience methods for
 actions that require complex chains of commands (e.g. uploading and retrieving
