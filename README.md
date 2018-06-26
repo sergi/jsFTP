@@ -212,7 +212,7 @@ Stores the remote file directly in the given local path.
 
 ```javascript
 ftp.get("remote/file.txt", "local/file.txt", err => {
-  if (hadErr) {
+  if (err) {
     return console.error("There was an error retrieving the file.");
   }
   console.log("File copied successfully!");
