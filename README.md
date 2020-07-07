@@ -86,7 +86,7 @@ Ftp.raw("mkd", "/new_dir", (err, data) => {
 
 ```javascript
 const {SocksClient} = require('socks');
-const ftp = new Ffp({
+const ftp = new Ftp({
   host: 'localhost',
   port: 3333,
   user: 'user',
