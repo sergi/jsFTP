@@ -116,6 +116,10 @@ Creates a new Ftp instance.
 
 Host name for the current FTP server.
 
+#### Ftp.hostPasv
+
+Manual set host for passive mode. (When server return wrong host on passive mode. See issue https://github.com/sergi/jsftp/issues/158)
+
 #### Ftp.port
 
 Port number for the current FTP server (defaults to 21).
